@@ -2,10 +2,14 @@ package ru.nstu.cinema.common.entity;
 
 import org.json.simple.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Объект описания зала кинотеатра
  */
-public class Hall {
+public class Hall implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int id;
     private String name;

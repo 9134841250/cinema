@@ -1,9 +1,13 @@
 package ru.nstu.cinema.common.entity;
 
+import java.io.Serializable;
+
 /**
  * Объект описания купленного места
  */
-public class Seat {
+public class Seat implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int id;
     private Session session;

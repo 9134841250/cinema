@@ -1,11 +1,14 @@
 package ru.nstu.cinema.common.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * Объект описания сеанса
  */
-public class Session {
+public class Session implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int id;
     private Film film;
