@@ -12,14 +12,14 @@
  PRIMARY KEY (id)
  );
 
-  CREATE TABLE film (
+  CREATE TABLE film(
  id INT NOT NULL AUTO_INCREMENT,
  name VARCHAR(255) NOT NULL, 
  descr VARCHAR(255),
  PRIMARY KEY (id)
  );
 
- CREATE TABLE session (
+ CREATE TABLE session(
  id INT NOT NULL AUTO_INCREMENT,
  session_time DATETIME NOT NULL, 
  hall_id INT NOT NULL,

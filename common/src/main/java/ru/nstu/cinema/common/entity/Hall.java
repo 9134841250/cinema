@@ -18,7 +18,12 @@ public class Hall implements Serializable {
 
     public Hall() {
     }
-
+    public Hall(int id, String name,String description,JSONObject structure) {
+        this.id=id;
+        this.name=name;
+        this.description=description;
+        this.structure=structure;
+    }
     public int getId() {
         return id;
     }

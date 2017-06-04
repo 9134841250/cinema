@@ -18,7 +18,13 @@ public class Session implements Serializable {
 
     public Session() {
     }
-
+    public Session(int id,Film film,Hall hall,LocalDateTime time,int price) {
+        this.id=id;
+        this.film=film;
+        this.hall=hall;
+        this.time=time;
+        this.price=price;
+    }
     public int getId() {
         return id;
     }

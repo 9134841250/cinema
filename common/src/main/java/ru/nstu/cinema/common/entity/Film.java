@@ -17,7 +17,11 @@ public class Film implements Serializable {
 
     public Film() {
     }
-
+    public Film(int id, String name,JSONObject descr) {
+        this.id=id;
+        this.name=name;
+        this.descr=descr;
+    }
     public int getId() {
         return id;
     }
