@@ -1,0 +1,41 @@
+ DROP DATABASE IF EXISTS cinema;
+
+ CREATE DATABASE cinema;
+
+ USE cinema; 
+
+ CREATE TABLE hall (
+ id INT NOT NULL AUTO_INCREMENT,
+ name VARCHAR(255) NOT NULL, 
+ descr VARCHAR(255),
+ struct TEXT NOT NULL,
+ PRIMARY KEY (id)
+ );
+
+  CREATE TABLE film (
+ id INT NOT NULL AUTO_INCREMENT,
+ name VARCHAR(255) NOT NULL, 
+ descr VARCHAR(255),
+ PRIMARY KEY (id)
+ );
+
+ CREATE TABLE session (
+ id INT NOT NULL AUTO_INCREMENT,
+ session_time DATETIME NOT NULL, 
+ hall_id INT NOT NULL,
+ film_id INT NOT NULL,
+ price INT NOT NULL,
+ PRIMARY KEY (id),
+ FOREIGN KEY (hall_id) REFERENCES hall(id),
+ FOREIGN KEY (film_id) REFERENCES film(id)
+ );
+
+ CREATE TABLE seats (
+ id INT NOT NULL AUTO_INCREMENT,
+ session_id INT NOT NULL, 
+ row INT NOT NULL,
+ seat INT NOT NULL,
+ PRIMARY KEY (id),
+ FOREIGN KEY (session_id) REFERENCES session(id)
+ );
+
