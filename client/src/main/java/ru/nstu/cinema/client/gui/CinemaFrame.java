@@ -15,6 +15,27 @@ public class CinemaFrame extends JFrame {
     }
 
     public void createGUI() {
+        Font font = new Font("Serif", Font.ITALIC, 24);
+
+       /* ImageIcon icon = createImageIcon("images/Cat.gif");
+        SizeDisplayer sd1 = new SizeDisplayer("left", icon);
+        sd1.setMinimumSize(new Dimension(30,30));
+        sd1.setFont(font);
+
+        icon = createImageIcon("images/Dog.gif");
+        SizeDisplayer sd2 = new SizeDisplayer("right", icon);
+        sd2.setMinimumSize(new Dimension(60,60));
+        sd2.setFont(font);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+                sd1, sd2);
+        splitPane.setResizeWeight(0.5);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setContinuousLayout(true);
+
+        add(splitPane, BorderLayout.CENTER);
+        add(createControlPanel(), BorderLayout.PAGE_END);
+        */
         JLabel label = new JLabel("You are successfully running a Swing applet!");
         label.setPreferredSize(new Dimension(175, 100));
         label.setHorizontalAlignment(JLabel.CENTER);
