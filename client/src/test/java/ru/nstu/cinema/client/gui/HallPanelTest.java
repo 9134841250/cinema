@@ -2,6 +2,7 @@ package ru.nstu.cinema.client.gui;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import ru.nstu.cinema.client.storage.TestStorage;
 import ru.nstu.cinema.common.entity.Film;
 import ru.nstu.cinema.common.entity.Hall;
 import ru.nstu.cinema.common.entity.Session;
@@ -14,11 +15,11 @@ public class HallPanelTest {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame();
+            JFrame frame = new JFrame("Панель выбора мест");
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setMinimumSize(new Dimension(400,300));
 
-            final HallPanel panel = new HallPanel();
+            final HallPanel panel = new HallPanel(new TestStorage());
             frame.add(panel);
 
             frame.pack();
