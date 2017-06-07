@@ -5,6 +5,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ru.nstu.cinema.common.entity.Film;
 import ru.nstu.cinema.common.entity.Hall;
+import ru.nstu.cinema.common.entity.Seat;
 import ru.nstu.cinema.common.entity.Session;
 
 import java.security.*;
@@ -428,11 +429,10 @@ public class CinemaStorage {
     }
 
     /**
-     * Вывести список всех сеансов по названию фильма
-     * @param filmName название фильма
-     * @return
+     * Вывести список всех сеансов
+     * @return список сеансов
      */
-    public List<Session> retrieveSessions(String filmName){
+    public List<Session> retrieveSessions(){
         Connection conn = null;
         PreparedStatement stmt = null;
         ArrayList<Session>result= new ArrayList<>();
@@ -456,8 +456,7 @@ public class CinemaStorage {
                             " LEFT JOIN %s b" +
                             " ON (a.%s=b.%s) " +
                             " LEFT JOIN %s c" +
-                            " ON (a.%s=c.%s) " +
-                            " WHERE b.%s=?",
+                            " ON (a.%s=c.%s) " ,
                     sessionFields.id, sessionFields.session_time, sessionFields.hall_id,sessionFields.film_id, sessionFields.price,
                     filmFields.id,filmFields.name,filmFields.descr,
                     hallFields.id,hallFields.name,hallFields.descr,hallFields.struct,
@@ -465,36 +464,34 @@ public class CinemaStorage {
                     databases.film,
                     sessionFields.film_id,filmFields.id,
                     databases.hall,
-                    sessionFields.hall_id,hallFields.id,
-                    filmFields.name);
+                    sessionFields.hall_id,hallFields.id);
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, filmName);
+
             ResultSet rs = stmt.executeQuery(sql);
 
             //STEP 5: Extract data from result set
             while(rs.next()){
                 //Retrieve by column name
-                int id  = rs.getInt( sessionFields.id.name() );
-                java.sql.Timestamp timestamp=rs.getTimestamp(sessionFields.session_time.name());
+                int id  = rs.getInt( 1 );
+                java.sql.Timestamp timestamp=rs.getTimestamp(2);
                 LocalDateTime session_time=timestamp.toLocalDateTime();
-                String hall_id = rs.getString( sessionFields.hall_id.name() );
-                int price = rs.getInt( sessionFields.price.name() );
+                int hall_id = rs.getInt( 3 );
+                int film_id = rs.getInt( 4 );
+                int price = rs.getInt( 5 );
 
-                int filmId=rs.getInt(filmFields.id.name());
-                String filmDescr=rs.getString(filmFields.descr.name());
+                int filmId=rs.getInt(6);
+                String filmName=rs.getString(7);
+                String filmDescr=rs.getString(8);
 
                 Film film=new Film(filmId,filmName,getJSONObjectFromString(filmDescr));
 
-                int hallId=rs.getInt(hallFields.id.name());
-                String hallName=rs.getString(hallFields.name.name());
-                String hallDescr=rs.getString(hallFields.descr.name());
-                String hallStruct=rs.getString(hallFields.struct.name());
+                int hallId=rs.getInt(9);
+                String hallName=rs.getString(10);
+                String hallDescr=rs.getString(11);
+                String hallStruct=rs.getString(12);
 
                 Hall hall=new Hall(hallId,hallName,hallDescr,getJSONObjectFromString(hallStruct));
                 result.add( new Session(id,film,hall,session_time, price));
-
-                //Display values
-                //System.out.print("ID: " + id);
 
             }
             //STEP 6: Clean-up environment
@@ -524,9 +521,75 @@ public class CinemaStorage {
         System.out.println("Goodbye!");
         return result;
     }
-    /*
-    public List<Seat> retrieveSeats(){
 
-    }*/
+    public List<Seat> retrieveSeats(Session session) {
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ArrayList<Seat> result = new ArrayList<>();
+        try {
+            //STEP 2: Register JDBC driver
+            Class.forName(JDBC_DRIVER);
+
+            //STEP 3: Open a connection
+            System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            //STEP 4: Execute a query
+            System.out.println("Creating statement...");
+
+            String sql;
+
+            sql = String.format("SELECT %s, %s, %s, %s" +
+                            " FROM %s " +
+                            " WHERE %s=? ;",
+                    seatsFields.id, seatsFields.session_id, seatsFields.row, seatsFields.seat,
+                    databases.seats,
+                    seatsFields.session_id);
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, session.getId());
+            ResultSet rs = stmt.executeQuery();
+
+            //STEP 5: Extract data from result set
+            while (rs.next()) {
+                //Retrieve by column name
+                int id = rs.getInt(1);
+                int session_id = rs.getInt(2);
+                int row = rs.getInt(3);
+                int seat = rs.getInt(4);
+
+
+                result.add(new Seat(id, session, row, seat));
+
+
+            }
+            //STEP 6: Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+        System.out.println("Goodbye!");
+        return result;
+    }
+
 
 }

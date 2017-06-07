@@ -17,6 +17,13 @@ public class Seat implements Serializable {
     public Seat() {
     }
 
+    public Seat(int id,Session session,int row,int seat) {
+        this.id=id;
+        this.session=session;
+        this.row=row;
+        this.seat=seat;
+    }
+
     public int getId() {
         return id;
     }

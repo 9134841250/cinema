@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import ru.nstu.cinema.common.entity.Film;
 import ru.nstu.cinema.common.entity.Hall;
+import ru.nstu.cinema.common.entity.Seat;
 import ru.nstu.cinema.common.entity.Session;
 
 import java.time.LocalDateTime;
@@ -116,12 +117,17 @@ public class AddValuesToDb {
         cinemaStorage.addSession(session);
 
 
-        cinemaStorage.addSeat(session,10,1);
+        cinemaStorage.addSeat(session,10,1);//3
+        cinemaStorage.addSeat(session,10,2);//3
+        cinemaStorage.addSeat(session,10,3);//3
+
 
         List<Film>films=cinemaStorage.retrieveFilms();
         List<Hall>halls=cinemaStorage.retrieveHalls();
-        List<Session>sessions=cinemaStorage.retrieveSessions("Wonder woman");
-        for(Session l:sessions){
+        List<Session>sessions=cinemaStorage.retrieveSessions();//2
+
+        List<Seat>seats=cinemaStorage.retrieveSeats(session);//1
+        for(Seat l:seats){
             System.out.println(l.toString());
         }
 
