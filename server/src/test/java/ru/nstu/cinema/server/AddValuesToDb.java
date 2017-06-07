@@ -117,19 +117,5 @@ public class AddValuesToDb {
         cinemaStorage.addSession(session);
 
 
-        cinemaStorage.addSeat(session,10,1);//3
-        cinemaStorage.addSeat(session,10,2);//3
-        cinemaStorage.addSeat(session,10,3);//3
-
-
-        List<Film>films=cinemaStorage.retrieveFilms();
-        List<Hall>halls=cinemaStorage.retrieveHalls();
-        List<Session>sessions=cinemaStorage.retrieveSessions();//2
-
-        List<Seat>seats=cinemaStorage.retrieveSeats(session);//1
-        for(Seat l:seats){
-            System.out.println(l.toString());
-        }
-
     }
 }

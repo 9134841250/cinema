@@ -8,7 +8,6 @@ import ru.nstu.cinema.common.entity.Hall;
 import ru.nstu.cinema.common.entity.Seat;
 import ru.nstu.cinema.common.entity.Session;
 
-import java.security.*;
 import java.sql.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -226,11 +225,9 @@ public class CinemaStorage {
 
     /***
      * Добавить инфу о занятом месте в БД
-     * @param session объект сеанса
-     * @param row ряд в зале
      * @param seat место в зале
      */
-    public void addSeat(Session session, int row, int seat) {
+    public void addSeat(Seat seat) {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -253,9 +250,9 @@ public class CinemaStorage {
             );
             stmt = conn.prepareStatement(sql);
 
-            stmt.setInt(1, session.getId());
-            stmt.setInt(2, row);
-            stmt.setInt(3, seat);
+            stmt.setInt(1, seat.getSession().getId());
+            stmt.setInt(2, seat.getRow());
+            stmt.setInt(3, seat.getSeat());
             stmt.execute();
 
 
