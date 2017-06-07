@@ -33,9 +33,10 @@ public class ServerHelper extends Thread {
             ObjectInputStream in = new ObjectInputStream(sin);
             ObjectOutputStream out = new ObjectOutputStream(sout);
 
-            Object object;
             while (true) {
-                object = in.read(); // ожидаем пока клиент пришлет строку текста.
+                Object object = in.readObject(); // ожидаем пока клиент пришлет строку текста.
+                if (!(object instanceof Integer))
+                    System.out.println(object);
                 if(object instanceof Command) {
                     switch (((Command) object).getCommand()) {
                         case "GET_SESSIONS":

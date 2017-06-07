@@ -10,26 +10,33 @@ import java.io.*;
 import java.net.Socket;
 import java.util.List;
 
-public class DataStorageImpl implements DataStorage, AutoCloseable {
+public class DataStorageImpl implements DataStorage {
 
-    private final Socket socket;
+//    private final Socket socket;
+    private final String host;
+    private final int port;
 
     public DataStorageImpl(String host, int port) throws IOException {
-        socket = new Socket(host, port);
-        socket.setKeepAlive(true);
+//        socket = new Socket(host, port);
+//        socket.setKeepAlive(true);
+        this.host = host;
+        this.port = port;
     }
 
     private Object sendCommand(Command command) throws IOException, ClassNotFoundException {
-        try (OutputStream out = socket.getOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(out)) {
-            oos.writeObject(command);
-        }
-        if ("STORE_SEAT".equals(command.getCommand())) {
-            return null;
-        }
-        try (InputStream is = socket.getInputStream();
-             ObjectInputStream ois = new ObjectInputStream(is)) {
-            return ois.readObject();
+        try (Socket socket = new Socket(host, port)) {
+            try (OutputStream out = socket.getOutputStream();
+                 InputStream is = socket.getInputStream();
+                 ObjectOutputStream oos = new ObjectOutputStream(out);
+                 ObjectInputStream ois = new ObjectInputStream(is)) {
+                oos.writeObject(command);
+                oos.flush();
+                if ("STORE_SEAT".equals(command.getCommand())) {
+                    return null;
+                }
+                return ois.readObject();
+//                return null;
+            }
         }
     }
 
@@ -45,7 +52,7 @@ public class DataStorageImpl implements DataStorage, AutoCloseable {
     @Override
     public List<Seat> loadStoredSeats(Session session) {
         try {
-            return (List<Seat>) sendCommand(new Command("GET_SEATS"));
+            return (List<Seat>) sendCommand(new Command("GET_SEATS", session));
         } catch (IOException|ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -70,8 +77,8 @@ public class DataStorageImpl implements DataStorage, AutoCloseable {
         }
     }
 
-    @Override
-    public void close() throws Exception {
-        socket.close();
-    }
+//    @Override
+//    public void close() throws Exception {
+//        socket.close();
+//    }
 }

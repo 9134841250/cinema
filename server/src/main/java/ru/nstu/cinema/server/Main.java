@@ -14,7 +14,7 @@ public class Main {
 
         boolean listeningSocket = true;
         try {
-            serverSocket = new ServerSocket(6666);
+            serverSocket = new ServerSocket(6669);
             System.out.println("Сервер доступен и ждет подключений");
         } catch (IOException e) {
             System.err.println("Could not listen on port: 6666");
@@ -25,6 +25,7 @@ public class Main {
             try {
                 if (serverSocket == null) throw new IOException();
                 clientSocket = serverSocket.accept();
+                System.out.println(clientSocket);
                 ServerHelper mini = new ServerHelper(clientSocket);
                 mini.start();
             } catch (IOException e) {

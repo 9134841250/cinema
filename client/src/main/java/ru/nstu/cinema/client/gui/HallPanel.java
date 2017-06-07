@@ -78,12 +78,12 @@ public class HallPanel extends JPanel {
         add(Box.createGlue());
 
         ((JSONArray) hall.getStructure().get("rows")).stream().sorted((o1, o2) -> {
-            int idOfRow1 = (Integer)((JSONObject) o1).get("id");
-            int idOfRow2 = (Integer)((JSONObject) o2).get("id");
-            return idOfRow1 - idOfRow2;
+            long idOfRow1 = (Long)((JSONObject) o1).get("id");
+            long idOfRow2 = (Long)((JSONObject) o2).get("id");
+            return (int)(idOfRow1 - idOfRow2);
         }).forEachOrdered(object -> {
-            int rowId = (Integer)((JSONObject) object).get("id");
-            int seats = (Integer)((JSONObject) object).get("seats");
+            long rowId = (Long)((JSONObject) object).get("id");
+            long seats = (Long)((JSONObject) object).get("seats");
             JPanel buttonPanel = new JPanel() {{setLayout(new BoxLayout(this, BoxLayout.X_AXIS));}};
             buttonPanel.add(new JLabel("Ряд " + rowId) {{setFont(getFont().deriveFont(10f));}});
             buttonPanel.add(Box.createGlue());
@@ -101,7 +101,7 @@ public class HallPanel extends JPanel {
                                 JOptionPane.YES_NO_OPTION);
                         if (dialogResult == JOptionPane.YES_OPTION) {
                             try {
-                                storage.storeSeat(session, rowId, seatId);
+                                storage.storeSeat(session, (int)rowId, seatId);
                                 setSeatDisabled((JButton)event.getSource());
                             } catch (RuntimeException e) {
                                 JOptionPane.showMessageDialog(HallPanel.this,
@@ -111,7 +111,7 @@ public class HallPanel extends JPanel {
                         }
                     });
                 }};
-                buttons.add(new SeatButtonInfo(seatButton, rowId, seatId));
+                buttons.add(new SeatButtonInfo(seatButton, (int)rowId, (int)seatId));
                 buttonPanel.add(seatButton);
             }
             buttonPanel.add(Box.createGlue());
