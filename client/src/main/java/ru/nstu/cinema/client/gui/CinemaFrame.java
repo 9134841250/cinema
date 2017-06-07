@@ -1,5 +1,8 @@
 package ru.nstu.cinema.client.gui;
 
+import ru.nstu.cinema.client.storage.DataStorage;
+import ru.nstu.cinema.common.entity.Session;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,39 +11,44 @@ import java.awt.*;
  */
 public class CinemaFrame extends JFrame {
 
-    public CinemaFrame() {
+    private final DataStorage storage;
+
+    public CinemaFrame(DataStorage storage) {
         super("Онлайн кинотеатр");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(400,300));
+        setPreferredSize(new Dimension(1100, 700));
+        this.storage = storage;
     }
 
     public void createGUI() {
-        Font font = new Font("Serif", Font.ITALIC, 24);
+        HallPanel hallPanel = new HallPanel(storage);
 
-       /* ImageIcon icon = createImageIcon("images/Cat.gif");
-        SizeDisplayer sd1 = new SizeDisplayer("left", icon);
-        sd1.setMinimumSize(new Dimension(30,30));
-        sd1.setFont(font);
-
-        icon = createImageIcon("images/Dog.gif");
-        SizeDisplayer sd2 = new SizeDisplayer("right", icon);
-        sd2.setMinimumSize(new Dimension(60,60));
-        sd2.setFont(font);
+        JList<Session> sessionList = new JList<Session>() {{
+            setLayoutOrientation(JList.VERTICAL);
+            setVisibleRowCount(0);
+            setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        }};
+        sessionList.addListSelectionListener((event) -> {
+            Session session = sessionList.getSelectedValue();
+            if (session != null) {
+                hallPanel.updateSession(session);
+            }
+        });
+        new Timer(60000, (event) -> sessionList.setListData(storage.loadSessions().toArray(new Session[0]))){{
+            setInitialDelay(0);
+            setRepeats(true);
+            start();
+        }};
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                sd1, sd2);
-        splitPane.setResizeWeight(0.5);
+                new JScrollPane(sessionList) {{setPreferredSize(new Dimension(200, 700));}},
+                new JScrollPane(hallPanel) {{setPreferredSize(new Dimension(900, 700));}});
+        splitPane.setResizeWeight(0.2);
         splitPane.setOneTouchExpandable(true);
         splitPane.setContinuousLayout(true);
 
-        add(splitPane, BorderLayout.CENTER);
-        add(createControlPanel(), BorderLayout.PAGE_END);
-        */
-        JLabel label = new JLabel("You are successfully running a Swing applet!");
-        label.setPreferredSize(new Dimension(175, 100));
-        label.setHorizontalAlignment(JLabel.CENTER);
-        label.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
-        getContentPane().add(label, BorderLayout.CENTER);
+        getContentPane().add(splitPane, BorderLayout.CENTER);
 
         //Display the window.
         pack();

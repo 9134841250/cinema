@@ -2,6 +2,7 @@ package ru.nstu.cinema.common.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Объект описания сеанса
@@ -18,6 +19,7 @@ public class Session implements Serializable {
 
     public Session() {
     }
+
     public Session(int id,Film film,Hall hall,LocalDateTime time,int price) {
         this.id=id;
         this.film=film;
@@ -82,12 +84,6 @@ public class Session implements Serializable {
 
     @Override
     public String toString() {
-        return "Session{" +
-                "id=" + id +
-                ", film=" + film +
-                ", hall=" + hall +
-                ", time=" + time +
-                ", price=" + price +
-                '}';
+        return "Фильм: " + film.getName() + ", " + time.format(DateTimeFormatter.ofPattern("dd.MM HH:mm"));
     }
 }

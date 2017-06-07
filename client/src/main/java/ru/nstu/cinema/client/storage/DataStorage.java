@@ -18,4 +18,6 @@ public interface DataStorage {
     List<Film> loadFilms();
 
     List<Session> loadSessionsByFilm(Film film);
+
+    List<Session> loadSessions();
 }

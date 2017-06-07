@@ -102,8 +102,7 @@ public class HallPanel extends JPanel {
                         if (dialogResult == JOptionPane.YES_OPTION) {
                             try {
                                 storage.storeSeat(session, rowId, seatId);
-                                ((JButton)event.getSource()).setEnabled(false);
-                                ((JButton)event.getSource()).setBackground(Color.red);
+                                setSeatDisabled((JButton)event.getSource());
                             } catch (RuntimeException e) {
                                 JOptionPane.showMessageDialog(HallPanel.this,
                                         "Произошла проблема при выборе места, попробуйте выбрать другое", "Ошибка",
@@ -127,19 +126,21 @@ public class HallPanel extends JPanel {
             java.util.List<Seat> seats = storage.loadStoredSeats(session);
             seats.forEach(seat -> buttons.stream()
                         .filter(button -> seat.getRow() == button.getRowId() && seat.getSeat() == button.getSeatId())
-                        .forEach(button -> {
-                            if (button.getSeatButton().isEnabled()) {
-                                button.getSeatButton().setBackground(Color.red);
-                                button.getSeatButton().setEnabled(false);
-                                button.getSeatButton().revalidate();
-                                button.getSeatButton().repaint();
-                            }
-                        }));
+                        .forEach(button -> setSeatDisabled(button.getSeatButton())));
         });
         reLoader.start();
 
         revalidate();
         repaint();
+    }
+
+    private void setSeatDisabled(JButton seat) {
+        if (seat.getBackground() != Color.red) {
+            seat.setBackground(Color.red);
+            seat.setEnabled(false);
+            seat.revalidate();
+            seat.repaint();
+        }
     }
 
     public void destroy() {
