@@ -1,9 +1,6 @@
 package ru.nstu.cinema.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -11,34 +8,34 @@ import java.net.Socket;
  * Main class starting server
  */
 public class Main {
-    public static void main(String[] ar)    {
-        int port = 6666; // случайный порт (может быть любое число от 1025 до 65535)
+    public static void main(String[] ar) {
+
+        ServerSocket serverSocket = null;
+
+        boolean listeningSocket = true;
         try {
-            ServerSocket ss = new ServerSocket(port); // создаем сокет сервера и привязываем его к вышеуказанному порту
-            System.out.println("Waiting for a client...");
+            serverSocket = new ServerSocket(6666);
+            System.out.println("Сервер доступен и ждет подключений");
+        } catch (IOException e) {
+            System.err.println("Could not listen on port: 6666");
+        }
 
-            Socket socket = ss.accept(); // заставляем сервер ждать подключений и выводим сообщение когда кто-то связался с сервером
-            System.out.println("Got a client :) ... Finally, someone saw me through all the cover!");
-            System.out.println();
-
-            // Берем входной и выходной потоки сокета, теперь можем получать и отсылать данные клиенту.
-            InputStream sin = socket.getInputStream();
-            OutputStream sout = socket.getOutputStream();
-
-            // Конвертируем потоки в другой тип, чтоб легче обрабатывать текстовые сообщения.
-            DataInputStream in = new DataInputStream(sin);
-            DataOutputStream out = new DataOutputStream(sout);
-
-            String line = null;
-            while(true) {
-                line = in.readUTF(); // ожидаем пока клиент пришлет строку текста.
-                System.out.println("The dumb client just sent me this line : " + line);
-                System.out.println("I'm sending it back...");
-                out.writeUTF(line); // отсылаем клиенту обратно ту самую строку текста.
-                out.flush(); // заставляем поток закончить передачу данных.
-                System.out.println("Waiting for the next line...");
-                System.out.println();
+        while (listeningSocket) {
+            Socket clientSocket;
+            try {
+                if (serverSocket == null) throw new IOException();
+                clientSocket = serverSocket.accept();
+                ServerHelper mini = new ServerHelper(clientSocket);
+                mini.start();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch(Exception x) { x.printStackTrace(); }
+
+        }
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
