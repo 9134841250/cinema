@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Интерфес работы с данными
  */
-public interface DataStorage {
+public interface DataStorage extends AutoCloseable {
 
     void storeSeat(Session session, int row, int seat);
 

@@ -12,11 +12,9 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
         SwingUtilities.invokeLater(() -> {
-            try  {
-                DataStorageImpl storage = new DataStorageImpl("127.0.0.1", 6669);
+            try {
+                DataStorageImpl storage = new DataStorageImpl("192.168.0.104", 6669);
                 new CinemaFrame(storage).createGUI();
             } catch (Exception e) {
                 throw new RuntimeException(e);

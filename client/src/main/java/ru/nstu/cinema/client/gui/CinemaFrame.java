@@ -5,9 +5,11 @@ import ru.nstu.cinema.common.entity.Session;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
- *
+ * Главный фрейм
  */
 public class CinemaFrame extends JFrame {
 
@@ -19,6 +21,16 @@ public class CinemaFrame extends JFrame {
         setMinimumSize(new Dimension(400,300));
         setPreferredSize(new Dimension(1100, 700));
         this.storage = storage;
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    CinemaFrame.this.storage.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     public void createGUI() {

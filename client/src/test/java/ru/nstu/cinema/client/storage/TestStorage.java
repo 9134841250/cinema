@@ -83,4 +83,9 @@ public class TestStorage implements DataStorage {
         session.setTime(LocalDateTime.of(2017, 6, 7, 15, 0));
         return Collections.singletonList(session);
     }
+
+    @Override
+    public void close() throws Exception {
+
+    }
 }
